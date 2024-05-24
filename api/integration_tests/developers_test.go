@@ -68,7 +68,7 @@ func TestUpdateDeveloper(t *testing.T) {
 	updatedDeveloper, err := app.GetDeveloper(developerId, db)
 	if err != nil { t.Fatal(err) }
 
-	if updatedDeveloper.Name != newName { t.Fatalf("unexpected name: %s", updatedDeveloper.Name) }
+	if updatedDeveloper.Name != domain.DeveloperName(newName) { t.Fatalf("unexpected name: %s", updatedDeveloper.Name) }
 	if !slices.Equal(updatedDeveloper.Members, newMember) {
 		t.Fatalf("unexpected member list") 
 	}
@@ -122,7 +122,7 @@ func containsAllListed(developers []domain.Developer, ids ...int) bool {
 	}
 
 	for _, developer := range developers {
-		id, err := strconv.Atoi(developer.Name)
+		id, err := strconv.Atoi(string(developer.Name))
 		if err != nil { panic("unexpected conversion failure") }
 
 		if !slices.Contains(ids, id) {

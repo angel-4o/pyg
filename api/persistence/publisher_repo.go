@@ -139,3 +139,31 @@ func (repo *publisherRepo) FindById(publisherId domain.PublisherId) (*domain.Pub
 
 	return &publisher, nil
 }
+
+func (repo *publisherRepo) FindByName(publisherName string) (*domain.Publisher, error) {
+	var publisher domain.Publisher
+	var membersJson []byte
+
+	err := repo.db.QueryRow(
+		`select id, name, created_by, members
+		 from publishers
+		 where name = $1`,
+		 publisherName,
+	).Scan(
+		&publisher.Id,
+		&publisher.Name,
+		&publisher.CreatedBy,
+		&membersJson,
+	)
+
+	if err != nil {
+		return nil, fmt.Errorf("%w: %w", apperrors.ErrPublisherNotFound, err)
+	}
+
+	err = json.Unmarshal(membersJson, &publisher.Members)
+	if err != nil {
+		return nil, fmt.Errorf("%w: %w", apperrors.ErrCannotUnmarshalMembers, err)
+	}
+
+	return &publisher, nil
+}

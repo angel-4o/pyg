@@ -9,6 +9,7 @@ type GameId int64
 type Game struct {
 	Id          GameId
 	DeveloperId DeveloperId
+	DeveloperName DeveloperName
 	Name        string
 	Description string
 	Genre       Genre

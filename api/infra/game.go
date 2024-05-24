@@ -19,13 +19,13 @@ func CreateGame(db *sql.DB) http.Handler {
 			http.Error(writer, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 			return
 		}
-
+		// errr := request.ParseMultipartForm(10 << 20)
 		var params struct {
-			DeveloperId int64
-			Name        string
-			Description string
-			Genre       string
-			Platform    string
+			DeveloperName string
+			Name          string
+			Description   string
+			Genre         string
+			Platform      string
 		}
 		err := parseBody(request, &params)
 		if err != nil {
@@ -45,7 +45,8 @@ func CreateGame(db *sql.DB) http.Handler {
 			return
 		}
 
-		gameId, err := app.CreateGame(sessionToken, domain.DeveloperId(params.DeveloperId),
+		// domain.Developer.Id // todo use developer id
+		gameId, err := app.CreateGame2(sessionToken, params.DeveloperName,
 			params.Name, params.Description, genre, platform, db)
 
 		if err != nil {
@@ -109,7 +110,8 @@ func GetGames(db *sql.DB) http.Handler {
 		}
 
 		gameRepo := persistence.MakeGameRepo(db)
-		games, nextPageToken, err := gameRepo.GetGames(data.PageToken(params.PageToken), params.Genre, params.Platform)
+		developerRepo := persistence.MakeDeveloperRepo(db)
+		games, nextPageToken, err := gameRepo.GetGames2(data.PageToken(params.PageToken), params.Genre, params.Platform, developerRepo)
 		if err != nil {
 			http.Error(writer, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 			return

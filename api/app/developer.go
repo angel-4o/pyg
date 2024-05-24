@@ -29,6 +29,14 @@ func CreateDeveloper(sessionToken data.SessionToken, name string, db *sql.DB) (d
 	}
 
 	developerRepo := persistence.MakeDeveloperRepo(db)
+	//developers, token, err := developerRepo.GetDevelopers()
+	// if (err != nil){
+	// 	return domain.DeveloperId(0), err
+	// }
+	//fmt.Print(token)
+	
+
+
 	developerId, err := developerRepo.Create(domain.MakeDeveloper(name, session.AccountId))
 	if err != nil {
 		return domain.DeveloperId(0), err
@@ -49,7 +57,7 @@ func UpdateDeveloper(sessionToken data.SessionToken, developerId domain.Develope
 	}
 
 	if name != nil {
-		developer.Name = *name
+		developer.Name = domain.DeveloperName(*name)
 	}
 	if members != nil {
 		developer.Members = members

@@ -49,7 +49,7 @@ func (repo *developerRepo) GetDevelopers(pageToken data.PageToken, pageSize int)
 		if err != nil {
 			return nil, pageToken, fmt.Errorf("%w: %w", apperrors.ErrCannotUnmarshalMembers, err)
 		}
-
+		// developer.Name
 		developers = append(developers, developer)
 	}
 
@@ -130,6 +130,37 @@ func (repo *developerRepo) FindById(developerId domain.DeveloperId) (*domain.Dev
 
 	if err != nil {
 		return nil, fmt.Errorf("%w: %w", apperrors.ErrDeveloperNotFound, err)
+	}
+
+	err = json.Unmarshal(membersJson, &developer.Members)
+	if err != nil {
+		return nil, fmt.Errorf("%w: %w", apperrors.ErrCannotUnmarshalMembers, err)
+	}
+
+	return &developer, nil
+}
+
+func (repo *developerRepo) FindByName(developerName string) (*domain.Developer, error) {
+	var developer domain.Developer
+	var membersJson []byte
+
+	err := repo.db.QueryRow(
+		`SELECT id, name, created_by, members
+		 FROM developers
+		 WHERE name = $1`,
+		developerName,
+	).Scan(
+		&developer.Id,
+		&developer.Name,
+		&developer.CreatedBy,
+		&membersJson,
+	)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, fmt.Errorf("%w: %s", apperrors.ErrDeveloperNotFound, developerName)
+		}
+		return nil, fmt.Errorf("database error: %w", err)
 	}
 
 	err = json.Unmarshal(membersJson, &developer.Members)

@@ -19,6 +19,7 @@ func Register(db *sql.DB) http.Handler {
 			FirstName string `json:"firstName"`
 			LastName  string `json:"lastName"`
 			Password  string `json:"password"`
+			Type      string `json:"type"`
 		}
 
 		err := json.NewDecoder(request.Body).Decode(&params)
@@ -28,7 +29,7 @@ func Register(db *sql.DB) http.Handler {
 			return
 		}
 
-		err = app.Register(params.Email, params.Username, params.FirstName, params.LastName, params. Password, db)
+		err = app.Register(params.Email, params.Username, params.FirstName, params.LastName, params.Password, db)
 		if err != nil {
 			log.Println(err.Error())
 		}

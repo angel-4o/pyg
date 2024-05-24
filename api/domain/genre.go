@@ -5,7 +5,7 @@ import "errors"
 type Genre int
 
 const (
-	Action      = Genre(iota)
+	Action      = Genre(iota) // 0
 	Adventure   = Genre(iota)
 	Rpg         = Genre(iota)
 	Strategy    = Genre(iota)

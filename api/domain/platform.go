@@ -6,7 +6,7 @@ type Platform int
 
 const (
 	Pc          = Platform(iota)
-	Mobile      = Platform(iota)
+	Mobile      = Platform(iota) //1
 	PlayStation = Platform(iota)
 	Xbox        = Platform(iota)
 	Nintendo    = Platform(iota)

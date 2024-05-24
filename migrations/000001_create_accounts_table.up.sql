@@ -4,7 +4,8 @@ create table if not exists accounts (
     username text unique not null,
     first_name text not null,
     last_name text not null,
-    password text not null
+    password text not null,
+    profile_type text not null,
 );
 
 create table if not exists sessions (

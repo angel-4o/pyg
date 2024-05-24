@@ -7,6 +7,11 @@ import (
 )
 
 func getSessionToken(request* http.Request) data.SessionToken {
+	sessionTokenFromHeader := request.Header.Get("sessionToken")
+	if sessionTokenFromHeader != "" {
+		return data.SessionToken(sessionTokenFromHeader) 
+	}
+
 	cookie, err := request.Cookie("sessionToken")
 	if err != nil {
 		return ""

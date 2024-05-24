@@ -1,19 +1,21 @@
 package domain
 
-import "strings"
+// import "strings"
 
 type DeveloperId int64
+type DeveloperName string
+
 
 type Developer struct {
 	Id        DeveloperId
-	Name      string
+	Name      DeveloperName
 	CreatedBy AccountId
 	Members   MemberList
 }
 
 func MakeDeveloper(name string, createdBy AccountId) *Developer {
 	return &Developer{
-		Name:      name,
+		Name:      DeveloperName(name),
 		CreatedBy: createdBy,
 		Members: MemberList{{
 			AccountId: createdBy,
@@ -23,7 +25,7 @@ func MakeDeveloper(name string, createdBy AccountId) *Developer {
 }
 
 func (developer *Developer) IsValid() bool {
-	return developer.Members.HasAdmin() && strings.TrimSpace(developer.Name) != ""
+	return developer.Members.HasAdmin() && developer.Name != ""
 }
 
 func (developer *Developer) IsAdmin(accountId AccountId) bool {
