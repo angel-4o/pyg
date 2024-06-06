@@ -134,3 +134,42 @@ func GetGames(db *sql.DB) http.Handler {
 		writer.Write(responseBody)
 	})
 }
+
+func GetGames2(db *sql.DB) http.Handler {
+	return http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
+		var params struct {
+			PageToken int64            `json:"pageToken"`
+			Genre     *domain.Genre    `json:"genre"`
+			Platform  *domain.Platform `json:"platform"`
+		}
+		err := parseBody(request, &params)
+		// if err != nil {
+		// 	http.Error(writer, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+		// 	return
+		// }
+
+		gameRepo := persistence.MakeGameRepo(db)
+		developerRepo := persistence.MakeDeveloperRepo(db)
+		games, nextPageToken, err := gameRepo.GetGames2(data.PageToken(params.PageToken), params.Genre, params.Platform, developerRepo)
+		if err != nil {
+			http.Error(writer, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+			return
+		}
+
+		var response = struct {
+			PageToken int64         `json:"pageToken"`
+			Games     []domain.Game `json:"developers"`
+		}{
+			PageToken: int64(nextPageToken),
+			Games:     games,
+		}
+
+		responseBody, err := json.Marshal(response)
+		if err != nil {
+			http.Error(writer, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+			return
+		}
+
+		writer.Write(responseBody)
+	})
+}

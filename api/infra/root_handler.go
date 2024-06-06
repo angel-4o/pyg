@@ -25,6 +25,7 @@ func NewRootHandler(db *sql.DB) http.Handler {
 	mux.Handle("POST /v1/game", contentTypeMiddleware(CreateGame(db)))
 	mux.Handle("GET /v1/game/{id}", contentTypeMiddleware(GetGame(db)))
 	mux.Handle("GET /v1/games", contentTypeMiddleware(GetGames(db)))
+	mux.Handle("GET /v1/allGames", contentTypeMiddleware(GetGames2(db)))
 
 	/*
 		/publishers
