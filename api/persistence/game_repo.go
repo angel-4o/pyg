@@ -121,7 +121,7 @@ func (repo *gameRepo) GetGames2(pageToken data.PageToken, genre *domain.Genre, p
 		select id, developer_id, name, description, genre, platform
 		from games
 		where id > $1
-		limit 30`,
+		limit 10000`,
 		pageToken,
 	)
 
