@@ -23,11 +23,11 @@ func Register(db *sql.DB) http.Handler {
 		}
 
 		err := json.NewDecoder(request.Body).Decode(&params)
-		if err != nil {
+		//if err != nil {
 			log.Println(err.Error())
 			http.Error(writer, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 			return
-		}
+		//}
 
 		err = app.Register(params.Email, params.Username, params.FirstName, params.LastName, params.Password, db)
 		if err != nil {
